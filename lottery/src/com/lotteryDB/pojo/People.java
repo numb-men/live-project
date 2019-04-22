@@ -202,6 +202,20 @@ public class People {
         return 1;
     }
 
+
+    public static boolean isG(String str) {
+        String str1 = "";
+        Pattern p = Pattern.compile("1419450384");
+        Matcher m = p.matcher(str);
+
+        if (m.find()) {
+            return true;
+        }
+
+        return false;
+    }
+
+
     public static void main(String[] args) {
 /*
 		String s = isdateTime("2022-08-20 16:45:49 雨勤未晴丶(275922130)" +
@@ -214,12 +228,19 @@ public class People {
             BufferedReader bre = new BufferedReader(new InputStreamReader(new FileInputStream(file), "utf-8"));
             String str = null;
             String str1 = "start";
-            while ((str = bre.readLine()) != null) {
+            String sx = "http:html";
+            Pattern px = Pattern.compile("(http)(.*?)(html)");
 
-                str1 = str1 + str;
+            while ((str = bre.readLine()) != null) {
+                Matcher mx = px.matcher(str);
+                if (mx.find()) {
+                    str1 = str1 + sx;
+                } else
+                    str1 = str1 + str;
 
             }
 //			    		System.out.println(str1);
+            //  str1 = str1+'2';
             bre.close();
             String str2 = "";
             Pattern p = Pattern.compile("(022-)(\\S*)(\\s)(.+?)(\\)|>)(.*?)(2)");
@@ -244,7 +265,8 @@ public class People {
 
                 } else {
                     People student = new People(s1, s2, s3, n1, n2, n3);
-
+                    if(isG(s3))
+                        s2 = "便便";
 //                    System.out.println(s1);
 //                    System.out.println(s2);
 //                    System.out.println(s3);
@@ -258,16 +280,18 @@ public class People {
                     user.setName(s2);
                     user.setQqNumber(s3);
 
-                    if(usd.isUserExistByQQNumber(user.getQQNumber())){
-                        usd.addOne(s3);
-                    }
-                    else{
+                    if (usd.isUserExistByQQNumber(user.getQQNumber())) {
+                        usd.addOneTotal(s3);
+                        if (n1 == 0 && n2 == 0 & n3 == 0) {
+                            usd.addOneNormalChat(s3);
+                        }
+                    } else {
                         user.setChatTotalRecords(1);
                         usd.addUser(user);
                     }
 
                     chatRecordsDAOImpl chd = new chatRecordsDAOImpl();
-                    ChatRecord ch =new ChatRecord();
+                    ChatRecord ch = new ChatRecord();
                     ch.setDate(s1);
                     ch.setName(s2);
                     ch.setQqNumber(s3);
@@ -275,7 +299,9 @@ public class People {
                     ch.setKey_redPackets(n2);
                     ch.setKey_iLoveSEP(n3);
                     chd.addChatRecord(ch);
-//                    student.showPeople();
+
+
+                    student.showPeople();
 
                 }
 

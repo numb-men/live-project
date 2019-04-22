@@ -12,7 +12,7 @@ public class userInfoDAOImpl implements userInfoDAO {
     public int getTotal() {
         int total = 0;
         try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
-            String sql = "select count(*) from userinfo";
+            String sql = "select count(*) from userInfo";
             ResultSet rs = s.executeQuery(sql);
             while (rs.next()) {
                 total = rs.getInt(1);
@@ -25,7 +25,7 @@ public class userInfoDAOImpl implements userInfoDAO {
 
     //新增用户记录
     public void addUser(User bean) {
-        String sql = "insert into userinfo values(? ,? ,?)";
+        String sql = "insert into userinfo values(? ,? ,? ,0)";
         try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, bean.getQQNumber());
             ps.setString(2, bean.getName());
@@ -36,11 +36,11 @@ public class userInfoDAOImpl implements userInfoDAO {
         }
     }
 
-    //获取用户信息表所有用户，存在list中
+/*    //获取用户信息表所有用户，存在list中
     public List<User> getAll() {
         List<User> list = new LinkedList<User>();
         try (Connection c = DBUtil.getConnection(); Statement s = c.createStatement()) {
-            String sql = "select * from userinfo";
+            String sql = "select * from userInfo";
             ResultSet rs = s.executeQuery(sql);
             while (rs.next()) {
                 User user = new User();
@@ -53,10 +53,10 @@ public class userInfoDAOImpl implements userInfoDAO {
             e.printStackTrace();
         }
         return list;
-    }
+    }*/
 
-    //通过QQ号获取该用户发布过的消息数量
-    public int getChatCountByQQNumber(String qqNumber) {
+    //通过QQ号获取该用户发布过的总消息数量
+    public int getTotalChatCountByQQNumber(String qqNumber) {
         User user = new User();
         int chatRecorders = 0;
         String sql = "select * from userinfo where qqNumber like ?";
@@ -65,6 +65,23 @@ public class userInfoDAOImpl implements userInfoDAO {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 chatRecorders = rs.getInt(3);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return chatRecorders;
+    }
+
+    //通过QQ号获取该用户发布过的普通消息数量
+    public int getNormalChatCountByQQNumber(String qqNumber) {
+        User user = new User();
+        int chatRecorders = 0;
+        String sql = "select * from userinfo where qqNumber like ?";
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, qqNumber);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                chatRecorders = rs.getInt(4);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,7 +106,7 @@ public class userInfoDAOImpl implements userInfoDAO {
         return exist;
     }
 
-    public void addOne(String qqNumber){
+    public void addOneTotal(String qqNumber){
         String sql = "update userinfo set chatTotalRecords=chatTotalRecords+1 where qqNumber like ?";
         try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, qqNumber);
@@ -99,6 +116,14 @@ public class userInfoDAOImpl implements userInfoDAO {
         }
     }
 
-
+    public void addOneNormalChat(String qqNumber){
+        String sql = "update userinfo set normalChatRecords=normalChatRecords+1 where qqNumber like ?";
+        try (Connection c = DBUtil.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, qqNumber);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

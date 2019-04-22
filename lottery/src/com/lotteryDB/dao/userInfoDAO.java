@@ -9,9 +9,15 @@ public interface userInfoDAO {
 
     void addUser(User bean);
 
-    List<User> getAll();
+    //List<User> getAll();
 
-    int getChatCountByQQNumber(String qqNumber);
+    int getTotalChatCountByQQNumber(String qqNumber);
 
-    void addOne(String qqNumber);
+    int getNormalChatCountByQQNumber(String qqNumber);
+
+    boolean isUserExistByQQNumber(String qqNumber);
+
+    void addOneTotal(String qqNumber);
+
+    void addOneNormalChat(String qqNumber);
 }

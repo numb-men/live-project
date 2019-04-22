@@ -6,8 +6,9 @@ public class User {
 
     private String qqNumber;
 
-
     private int chatTotalRecords;
+
+    private int normalChatRecords;
 
     public void setName(String name) {
         this.name = name;
@@ -31,5 +32,13 @@ public class User {
 
     public int getChatTotalRecords() {
         return chatTotalRecords;
+    }
+
+    public int getNormalChatRecords() {
+        return normalChatRecords;
+    }
+
+    public void setNormalChatRecords(int normalChatRecords) {
+        this.normalChatRecords = normalChatRecords;
     }
 }

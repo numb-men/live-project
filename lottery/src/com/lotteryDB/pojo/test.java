@@ -1,11 +1,9 @@
 package com.lotteryDB.pojo;
 
 import com.lotteryDB.dao.chatRecordsDAOImpl;
-import com.lotteryDB.domain.ChatRecord;
 import com.lotteryDB.domain.User;
 import com.lotteryDB.dao.userInfoDAOImpl;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class test {
@@ -34,8 +32,12 @@ public class test {
         }
     }
 
+    public static void getNormal(){
+        userInfoDAOImpl userDaoImpl = new userInfoDAOImpl();
+        System.out.println(userDaoImpl.getNormalChatCountByQQNumber("1259125431"));
+    }
+
     public static void main(String[] args) {
-        pickEligibleUsers();
-//        get();
+        getNormal();
     }
 }
