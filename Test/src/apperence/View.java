@@ -1,11 +1,17 @@
 package apperence;
 
+import com.lotteryAg.DrawLottery;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.regex.*;
+import  com.lotteryAg.*;
+import com.lotteryDB.domain.User;
 
 class BackgroundPanel extends JPanel{
     private static final long serialVersionUID = -6352788025440244338L;
@@ -32,7 +38,8 @@ public class View {
     private JLabel error;
     private ButtonGroup rg=new ButtonGroup();
     private ButtonGroup rg1=new ButtonGroup();
-
+    private int type;
+    private int type2;
     public View() {
 
         result.setColumns(30);
@@ -59,14 +66,33 @@ public class View {
                 }
                 //获取点击的单选框文本本（抽奖关键词）
                 String kword = null;//抽奖关键词
+
                 Enumeration<AbstractButton> modelBtns1=rg1.getElements();
-                while (modelBtns.hasMoreElements()) {
-                    AbstractButton modelbtn = modelBtns.nextElement();
+                while (modelBtns1.hasMoreElements()) {
+                    AbstractButton modelbtn = modelBtns1.nextElement();
                     if(modelbtn.isSelected()){
                         kword=modelbtn.getText();
                         break;
                     }
                 }
+                /*选择过滤关键词*/
+                if(kword.equals(new String("我要红包"))){
+                    type=2;
+                }
+                else if(kword.equals(new String("我要换组"))){
+                    type=1;
+                }
+                else if(kword.equals(new String("我爱软工实践"))){
+                    type=3;
+                }
+                else{
+                    type=0;
+                }
+
+
+
+
+
                 // String stime=startTime.getText();//抽奖开始时间
                 String etime=endTime.getText();//抽奖结束时间
                 String stime=startTime.getText();
@@ -81,24 +107,32 @@ public class View {
                 }
                 else
                 {
+                    /*选择过滤方式*/
                     error.setText("");
-                    if(filerWay.equals("深度过滤"))
-                    {
-
+                    if(filerWay.equals("不过滤")){
+                        type2=1;
                     }
-                    else if(filerWay.equals("不过滤"))
-                    {
-
+                    else if(filerWay.equals("普通过滤")){
+                        type2=2;
                     }
-                    else
-                    {
-
+                    else if(filerWay.equals("深度过滤")){
+                        type2=3;
                     }
 
                 }
 
-                result.setText("abchsbdvdshhhhhhhhhhhhhhhhhhhhhhhhjv");
 
+
+                ArrayList<User> userlist=null;
+                try {
+                    userlist= DrawLottery.CheckedPeople(stime,etime,type,Integer.parseInt(acount),type2);//获取中奖名单
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+                result.setText("");
+                for(User user : userlist){
+                    result.append(user.getName()+" "+user.getQQNumber()+"\n");
+                }
             }
         });
     }
