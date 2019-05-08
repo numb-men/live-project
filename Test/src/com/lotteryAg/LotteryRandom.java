@@ -1,6 +1,6 @@
 package com.lotteryAg;
 import java.util.*;
-import org.omg.CORBA.PUBLIC_MEMBER;
+//import org.omg.CORBA.PUBLIC_MEMBER;
 
 public  class LotteryRandom{
 	public static ArrayList<Integer> getDiffNO(int giftnum,int peoplenum){
